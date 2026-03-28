@@ -9,6 +9,7 @@
   --text-dim: #424245;
   
   --border-subtle: rgba(255, 255, 255, 0.08);
+  --accent: #0ff0fc;
 
   --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
@@ -23,8 +24,7 @@ html {
   font-family: var(--font-family);
   background-color: var(--bg-primary);
   color: var(--text-main);
-  /* Remove smooth scrolling to prevent conflict with framer-motion scroll hijack */
-  scroll-behavior: auto; 
+  scroll-behavior: auto;
 }
 
 body {
@@ -33,10 +33,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-main);
-  /* The layout relies on height to allow scroll, we'll set enormous heights on sections */
 }
 
-/* Utilities */
+/* ===========================
+   FILM GRAIN OVERLAY
+   =========================== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* ===========================
+   UTILITIES
+   =========================== */
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -51,7 +67,9 @@ body {
 .gap-4 { gap: 1rem; }
 .gap-8 { gap: 2rem; }
 
-/* Sticky Container */
+/* ===========================
+   STICKY + SCROLL SECTION
+   =========================== */
 .scroll-section {
   position: relative;
 }
@@ -67,32 +85,33 @@ body {
   justify-content: center;
 }
 
-/* Typography Apple-style */
+/* ===========================
+   TYPOGRAPHY (Apple-style)
+   =========================== */
 .h-massive {
   font-size: clamp(3rem, 8vw, 8rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.04em;
-  text-align: center;
 }
 
 .h-large {
-  font-size: clamp(2rem, 5vw, 5rem);
+  font-size: clamp(1.8rem, 4vw, 4rem);
   font-weight: 600;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 .p-large {
-  font-size: clamp(1.2rem, 2vw, 2rem);
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
   font-weight: 400;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.5;
   letter-spacing: -0.01em;
 }
 
 .p-medium {
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
   color: var(--text-muted);
   line-height: 1.5;
 }
@@ -104,14 +123,17 @@ body {
   background-clip: text;
 }
 
+/* ===========================
+   GLASS NAV
+   =========================== */
 .glass-nav {
   position: fixed;
   top: 0;
   width: 100vw;
   height: 60px;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   z-index: 100;
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
@@ -127,33 +149,45 @@ body {
 
 .nav-brand {
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   letter-spacing: -0.02em;
 }
 
 .nav-links a {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   margin-left: 1.5rem;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
   color: var(--text-main);
 }
 
-/* Experience Cards */
+/* ===========================
+   EXPERIENCE CARDS
+   =========================== */
 .exp-card {
-  background: #111111;
-  border-radius: 20px;
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 24px;
   padding: 3rem;
   border: 1px solid var(--border-subtle);
   transform-style: preserve-3d;
   will-change: transform;
+  transition: border-color 0.4s ease;
 }
 
+.exp-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
 .btn-apple {
   background: #ffffff;
   color: #000000;
@@ -161,16 +195,211 @@ body {
   padding: 1rem 2rem;
   border-radius: 9999px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.33, 1, 0.68, 1);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-family);
 }
 
 .btn-apple:hover {
   background: #e5e5e5;
-  transform: scale(1.02);
+  transform: scale(1.04);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-family);
+}
+
+.btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===========================
+   MARQUEE
+   =========================== */
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+}
+
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee-item {
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  flex-shrink: 0;
+  padding: 0 0.5rem;
+}
+
+.marquee-sep {
+  color: var(--text-dim);
+  margin: 0 1.5rem;
+  font-weight: 300;
+}
+
+/* ===========================
+   PRELOADER
+   =========================== */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.preloader-name {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, #FFFFFF 0%, #666666 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.preloader-bar {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  transform-origin: left;
+}
+
+/* ===========================
+   PARALLAX IMAGE
+   =========================== */
+.parallax-section {
+  position: relative;
+  height: 80vh;
+  overflow: hidden;
+}
+
+.parallax-image-wrapper {
+  position: absolute;
+  inset: -15%;
+  will-change: transform;
+}
+
+.parallax-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.4) saturate(1.2);
+}
+
+.parallax-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  text-align: center;
+  padding: 0 5%;
+}
+
+/* ===========================
+   ANIMATED COUNTER
+   =========================== */
+.stat-card {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 200px;
+  flex: 1;
+  transition: border-color 0.4s ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.stat-number {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+/* ===========================
+   SECTION SPACING
+   =========================== */
+.section-pad {
+  padding: 12vh 0;
+}
+
+/* ===========================
+   RESPONSIVE - mobile tweaks
+   =========================== */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none !important;
+  }
+  
+  .stats-grid {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  .exp-card {
+    min-width: 85vw !important;
+    padding: 2rem;
+  }
 }

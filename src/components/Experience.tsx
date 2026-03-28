@@ -1,42 +1,44 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { Target, MonitorPlay, Code2 } from 'lucide-react';
+import { TextReveal } from './TextReveal';
 
 const experiences = [
   {
     role: "Captain",
     company: "MakEMinds FTC 23786",
-    period: "2023 - Present",
+    period: "2023 — Present",
     description: "Founded and lead a competitive robotics team in Edison, NJ. Focusing on STEM education, advanced control systems, and innovative engineering.",
-    icon: <Target size={32} color="#ffffff" />
+    icon: <Target size={28} />,
+    color: '#0ff0fc',
   },
   {
     role: "Content Creator",
     company: "Frinklyy (YouTube)",
     period: "Ongoing",
-    description: "Documenting building, coding, gaming, and 3D printing projects. Sharing high school experiences and technical knowledge.",
-    icon: <MonitorPlay size={32} color="#ffffff" />
+    description: "Documenting building, coding, gaming, and 3D printing projects. Sharing high school experiences and technical knowledge with a growing audience.",
+    icon: <MonitorPlay size={28} />,
+    color: '#ff6b6b',
   },
   {
     role: "Full-Stack Developer",
     company: "Freelance",
     period: "Ongoing",
-    description: "Building bleeding-edge web applications using React, TypeScript, and Framer Motion. Focused on creating immersive, award-winning user experiences.",
-    icon: <Code2 size={32} color="#ffffff" />
+    description: "Building bleeding-edge web applications with React, TypeScript, and modern animation frameworks. Creating immersive, award-worthy digital experiences.",
+    icon: <Code2 size={28} />,
+    color: '#9d4edd',
   }
 ];
 
 export function Experience() {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // 300vh gives enough scroll room so the horizontal movement occurs smoothly
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  // A wide translation mapping the vertical scroll completely into horizontal translation
-  const xTranslate = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
+  const xTranslate = useTransform(scrollYProgress, [0, 1], ["0%", "-66%"]);
 
   return (
     <section ref={containerRef} id="experience" style={{ height: '300vh', position: 'relative' }}>
@@ -48,21 +50,35 @@ export function Experience() {
           display: 'flex', 
           alignItems: 'center', 
           overflow: 'hidden',
-          background: '#000000'
+          background: '#000'
         }}
       >
         <motion.div 
           style={{ 
             display: 'flex', 
-            gap: '4rem', 
-            paddingLeft: '10vw', 
+            gap: '3rem', 
+            paddingLeft: '8vw', 
             x: xTranslate 
           }}
         >
-          {/* Introductory Title Card */}
+          {/* Lead-in Title */}
           <div style={{ minWidth: '40vw', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h2 className="h-massive text-gradient-white">The Journey.</h2>
-            <p className="p-large" style={{ marginTop: '1rem', opacity: 0.7 }}>Scroll right to explore.</p>
+            <TextReveal 
+              text="The Journey."
+              as="h2"
+              className="h-massive text-gradient-white"
+              staggerSpeed={0.08}
+            />
+            <motion.p 
+              className="p-large" 
+              style={{ marginTop: '1.5rem', opacity: 0.6 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.6 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              Scroll to explore →
+            </motion.p>
           </div>
 
           {experiences.map((exp, index) => (
@@ -70,33 +86,71 @@ export function Experience() {
               key={index}
               className="exp-card"
               style={{
-                minWidth: '50vw',
-                height: '60vh',
+                minWidth: '48vw',
+                height: '65vh',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center'
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden',
               }}
               whileHover={{ 
-                scale: 1.02, 
-                backgroundColor: 'rgba(30, 30, 30, 0.6)' 
+                scale: 1.015,
+                borderColor: `${exp.color}33`,
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
             >
-              <div style={{ marginBottom: '2rem' }}>
-                {exp.icon}
+              {/* Subtle accent glow */}
+              <div style={{
+                position: 'absolute',
+                top: '-50%',
+                right: '-20%',
+                width: '300px',
+                height: '300px',
+                borderRadius: '50%',
+                background: `radial-gradient(circle, ${exp.color}08, transparent 70%)`,
+                pointerEvents: 'none',
+              }} />
+
+              <div>
+                <div style={{ 
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', 
+                  marginBottom: '2rem',
+                }}>
+                  <div style={{ 
+                    width: '56px', height: '56px', 
+                    borderRadius: '16px', 
+                    background: `${exp.color}15`,
+                    border: `1px solid ${exp.color}25`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: exp.color,
+                  }}>
+                    {exp.icon}
+                  </div>
+                  <span className="p-medium" style={{ 
+                    border: '1px solid var(--border-subtle)', 
+                    padding: '0.4rem 1rem', 
+                    borderRadius: '100px',
+                    fontSize: '0.85rem',
+                  }}>
+                    {exp.period}
+                  </span>
+                </div>
+
+                <h3 className="h-large text-gradient-white" style={{ marginBottom: '0.5rem' }}>
+                  {exp.role}
+                </h3>
+                <h4 className="p-large" style={{ color: '#ffffff', marginBottom: '1.5rem', opacity: 0.9 }}>
+                  {exp.company}
+                </h4>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
-                <h3 className="h-large text-gradient-white">{exp.role}</h3>
-                <span className="p-medium" style={{ border: '1px solid #333', padding: '0.5rem 1rem', borderRadius: '100px' }}>
-                  {exp.period}
-                </span>
-              </div>
-              <h4 className="p-large" style={{ color: '#ffffff', marginBottom: '1.5rem' }}>{exp.company}</h4>
-              <p className="p-medium" style={{ fontSize: '1.25rem' }}>{exp.description}</p>
+
+              <p className="p-medium" style={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
+                {exp.description}
+              </p>
             </motion.div>
           ))}
 
-          {/* Spacer at the end so the last card doesn't hit the absolute edge */}
           <div style={{ minWidth: '10vw' }} />
         </motion.div>
       </div>
