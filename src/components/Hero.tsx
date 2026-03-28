@@ -1,58 +1,52 @@
-import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Track scroll just for the hero section
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end center"], // triggers as the section leaves the viewport
+    offset: ["start start", "end center"]
   });
 
-  // Calculate transforms based on scroll
+  // Give the hero a 3D parallax effect as you scroll away from it
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 25]); // 3D tilt back
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
-    <section 
-      ref={containerRef} 
-      className="scroll-section" 
-      style={{ height: '150vh' }} // Make it tall to allow scroll
-    >
-      <div className="sticky-container">
+    <section ref={containerRef} style={{ height: '150vh', position: 'relative' }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#000000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        
         <motion.div 
-          className="flex-col items-center justify-center gap-4"
           style={{ 
             scale, 
-            opacity, 
-            y, 
-            rotateX,
-            perspective: 1000,
-            transformStyle: "preserve-3d"
+            opacity,
+            y,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'
           }}
         >
           <motion.h1 
             className="h-massive text-gradient-white"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             Arya Vora.
           </motion.h1>
           
           <motion.p 
-            className="p-large text-center max-w-2xl"
-            initial={{ opacity: 0, y: 20 }}
+            className="p-large" 
+            style={{ marginTop: '2rem', maxWidth: '800px', padding: '0 2rem' }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            Captain of MakEMinds. Photographer. Frinklyy. <br />
-            Building the future of competitive robotics from Edison, NJ.
+            Captain of MakEMinds. Photographer. Frinklyy.
+            <br/>Building the future of competitive robotics from Edison, NJ.
           </motion.p>
         </motion.div>
+
       </div>
     </section>
   );
