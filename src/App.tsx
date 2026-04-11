@@ -7,26 +7,12 @@ import { Preloader } from './components/Preloader';
 import { Marquee } from './components/Marquee';
 import { ParallaxImage } from './components/ParallaxImage';
 import { motion, useScroll } from 'framer-motion';
-import { useMousePosition } from './hooks/useMousePosition';
-import { useEffect, useState } from 'react';
+import { CustomCursor } from './components/CustomCursor';
+import { useEffect } from 'react';
 
 function App() {
   const { scrollYProgress } = useScroll();
-  const { x, y } = useMousePosition();
-  const [isHovering, setIsHovering] = useState(false);
 
-  useEffect(() => {
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a') || target.closest('button')) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-    window.addEventListener('mouseover', handleMouseOver);
-    return () => window.removeEventListener('mouseover', handleMouseOver);
-  }, []);
 
   return (
     <SmoothScroll>
@@ -34,33 +20,7 @@ function App() {
       <Preloader />
 
       {/* === CUSTOM CURSOR === */}
-      <motion.div
-        className="custom-cursor"
-        animate={{
-          x: x - 16,
-          y: y - 16,
-          scale: isHovering ? 2.5 : 1,
-          opacity: isHovering ? 0.15 : 0.8
-        }}
-        transition={{
-          type: 'spring',
-          damping: 25,
-          mass: 0.5,
-          stiffness: 350
-        }}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '32px',
-          height: '32px',
-          borderRadius: '50%',
-          backgroundColor: '#ffffff',
-          pointerEvents: 'none',
-          mixBlendMode: 'difference',
-          zIndex: 99998
-        }}
-      />
+      <CustomCursor />
 
       {/* === SCROLL PROGRESS === */}
       <motion.div
@@ -103,7 +63,7 @@ function App() {
       </nav>
 
       {/* === MAIN CONTENT === */}
-      <main>
+      <main style={{ position: 'relative', zIndex: 1, backgroundColor: '#000', paddingBottom: '5vh', marginBottom: '100vh' }}>
         <Hero />
         
         {/* Skills Marquee */}
@@ -129,8 +89,12 @@ function App() {
           speed={30}
         />
         
-        <Contact />
       </main>
+
+      {/* === CURTAIN REVEAL FOOTER === */}
+      <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '100vh', zIndex: 0, backgroundColor: '#000' }}>
+        <Contact />
+      </div>
     </SmoothScroll>
   );
 }

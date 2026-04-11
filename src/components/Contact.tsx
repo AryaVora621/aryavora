@@ -6,13 +6,12 @@ export function Contact() {
   return (
     <section 
       id="contact"
-      className="scroll-section section-pad" 
+      className="scroll-section" 
       style={{ 
-        minHeight: '80vh', 
+        height: '100vh', 
         display: 'flex', flexDirection: 'column', 
         alignItems: 'center', justifyContent: 'center',
         textAlign: 'center',
-        padding: '15vh 5%'
       }}
     >
       <motion.div 

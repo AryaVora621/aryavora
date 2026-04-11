@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { Target, MonitorPlay, Code2 } from 'lucide-react';
 import { TextReveal } from './TextReveal';
+import { setCursor } from './CustomCursor';
 
 const experiences = [
   {
@@ -39,9 +40,17 @@ export function Experience() {
   });
 
   const xTranslate = useTransform(scrollYProgress, [0, 1], ["0%", "-66%"]);
+  // Intra-card parallax element moves slightly slower/faster than the card itself
+  const innerX = useTransform(scrollYProgress, [0, 1], ["0%", "45%"]);
 
   return (
-    <section ref={containerRef} id="experience" style={{ height: '300vh', position: 'relative' }}>
+    <section 
+      ref={containerRef} 
+      id="experience" 
+      style={{ height: '300vh', position: 'relative', cursor: 'none' }}
+      onMouseEnter={() => setCursor('drag', 'SCROLL')}
+      onMouseLeave={() => setCursor('default')}
+    >
       <div 
         style={{ 
           position: 'sticky', 
@@ -112,7 +121,7 @@ export function Experience() {
                 pointerEvents: 'none',
               }} />
 
-              <div>
+              <motion.div style={{ x: innerX, width: '100%' }}>
                 <div style={{ 
                   display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', 
                   marginBottom: '2rem',
@@ -143,7 +152,7 @@ export function Experience() {
                 <h4 className="p-large" style={{ color: '#ffffff', marginBottom: '1.5rem', opacity: 0.9 }}>
                   {exp.company}
                 </h4>
-              </div>
+              </motion.div>
 
               <p className="p-medium" style={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
                 {exp.description}
